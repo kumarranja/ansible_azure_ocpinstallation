@@ -1,0 +1,77 @@
+- name: Create Azure VM
+  hosts: localhost
+  connection: local
+#  vars:
+#    NICname: "NICetcd2"
+#    VMname: "etcd2"
+#    IP: "10.30.1.11"
+
+  tasks:
+  - name: Create a resource group
+    azure_rm_resourcegroup:
+      name: ocpthreedotsix
+      location: centralus
+
+  - name: Create virtual network
+    azure_rm_virtualnetwork:
+      resource_group: ocpthreedotsix
+      name: VNETthreedotsix
+      address_prefixes: "10.30.1.0/24"
+#      state: absent
+
+  - name: Add subnet
+    azure_rm_subnet:
+      resource_group: ocpthreedotsix
+      name: default
+      address_prefix: "10.30.1.0/24"
+      virtual_network: VNETthreedotsix
+  - name: Create Network Security Group that allows SSH
+    azure_rm_securitygroup:
+      resource_group: ocpthreedotsix
+      name: NSGthreedotsix
+    rules:
+      - name: SSH
+        protocol: Tcp
+        destination_port_range: 22
+        access: Allow
+        priority: 100
+        direction: Inbound
+  - name: Create virtual network interface card
+    azure_rm_networkinterface:
+      resource_group: ocpthreedotsix
+      name: NICmaster2
+      virtual_network: VNETthreedotsix
+      subnet: default
+      security_group_name: NSGthreedotsix
+#      state: absent
+    ip_configurations:
+     - name: master2
+       private_ip_address: 10.30.1.5
+       private_ip_allocation_method: static
+      # public_ip: false
+       public_ip_alloc_method: disable
+#       public_ip_alloc_method: static
+#       public_ip_address_name: publicipbastion
+
+  - name: Create VM
+    azure_rm_virtualmachine:
+      resource_group: ocpthreedotsix
+      name: master2
+      vm_size: Standard_D4s_v3
+      admin_username: ocpadmin
+      admin_password: welcome#1234
+      network_interfaces: NICmaster2
+      managed_disk_type: Premium_LRS
+      image:
+        offer: RHEL
+        publisher: RedHat
+        sku: '7.4'
+        urn: 'RedHat:RHEL:7.4:latest'
+        version: latest
+      data_disks:
+        - lun: 0
+          disk_size_gb: 100
+          managed_disk_type: Premium_LRS
+        - lun: 1
+          disk_size_gb: 100
+          managed_disk_type: Premium_LRS
