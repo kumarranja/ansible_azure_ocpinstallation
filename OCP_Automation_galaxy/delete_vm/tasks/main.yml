@@ -1,0 +1,31 @@
+---
+- debug:
+    msg: "{{ input }}"
+
+- name: remove vm and all resources except public ips
+  azure_rm_virtualmachine:
+    resource_group: "{{ item.RGname }}"
+    name: "{{ item.VMname }}"
+    state: absent
+  with_items: "{{ input }}"
+
+- name: delete security group
+  azure_rm_securitygroup:
+      resource_group: "{{ item.RGname }}"
+      name: "{{ item.NSGname }}"
+      state: absent
+  with_items: "{{ input }}"
+
+- name: Delete a virtual network
+  azure_rm_virtualnetwork:
+    name: "{{ item.VNETname }}"
+    resource_group: "{{ item.RGname }}"
+    state: absent
+  with_items: "{{ input }}"
+
+- name: delete a resource group
+  azure_rm_resourcegroup:
+    name: "{{ item.RGname }}"
+    location: "{{ item.RGlocation }}"
+    state: absent
+  with_items: "{{ input }}"

@@ -1,0 +1,12 @@
+- set_fact: 
+    csv_var: /home/ocpadmin/OCP_Automation_galaxy/ocp/inputs/input.csv
+
+- set_fact:
+    csv_file: "{{ lookup('file', csv_var ) }}"
+
+- name: "convert csv to yaml"
+  template:
+    src: "./templates/csv_to_yaml.j2"
+    dest: "/home/ocpadmin/OCP_Automation_galaxy/ocp/vars/main.yaml"
+  run_once: true
+

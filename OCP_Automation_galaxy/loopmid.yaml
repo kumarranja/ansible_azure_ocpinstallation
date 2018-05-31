@@ -1,0 +1,3 @@
+---
+- name: calling mid loop
+  include_tasks: inner.yaml

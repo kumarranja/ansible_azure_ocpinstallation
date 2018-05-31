@@ -1,0 +1,10 @@
+---
+- name: "convert csv to yaml"
+  include: csv_yaml.yaml
+
+#- debug:
+#    msg: "{{ input }}"
+
+- include_vars: /home/ocpadmin/OCP_Automation_galaxy/ocp/vars/main.yaml
+
+- include: multiple_vm.yaml

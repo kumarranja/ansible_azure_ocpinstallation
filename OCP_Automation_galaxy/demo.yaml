@@ -1,0 +1,11 @@
+- hosts: localhost
+  vars_prompt:
+    - name: "password"
+      prompt: "Password"
+      private: yes
+  pre_tasks:
+    - assert:
+        that: password | length > 6
+  tasks:
+    - debug:
+        var: password
