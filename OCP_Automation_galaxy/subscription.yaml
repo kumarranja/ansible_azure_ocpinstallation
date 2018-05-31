@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  become: true
+  tasks:
+    - name: Register with activationkey and consume subscriptions matching Red Hat Enterprise Server or Red Hat Virtualization
+      redhat_subscription:
+        state: present
+        username: Dave.Tucker1
+        password: Openshift22
+        pool: '^(Red Hat OpenShift Container Platform for Certified Cloud and Service Providers)$'
+      register: subscription
+
+    - name: print value   
+      debug: 
+        msg: "{{ subscription }}"
