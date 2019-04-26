@@ -1,12 +1,18 @@
-- set_fact: 
-    csv_var: /home/ocpadmin/OCP_Automation_galaxy/ocp/inputs/input.csv
+- name: Find out playbooks path
+  shell: pwd
+  register: playbook_path_output
+- debug: var=playbook_path_output.stdout
 
+- set_fact: 
+  #    csv_var: "'{{ playbook_path_output }}'/ocp/inputs/input.csv"
+  #    csv_var:  '{{playbook_path_output + "/ocp/inputs/input.csv" }}'
+    csv_var: "{{role_path}}/inputs/input.csv"
 - set_fact:
     csv_file: "{{ lookup('file', csv_var ) }}"
 
 - name: "convert csv to yaml"
   template:
     src: "./templates/csv_to_yaml.j2"
-    dest: "/home/ocpadmin/OCP_Automation_galaxy/ocp/vars/main.yaml"
+    dest: "{{ role_path }}/vars/main.yaml"
   run_once: true
 

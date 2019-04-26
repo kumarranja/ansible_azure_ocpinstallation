@@ -2,6 +2,6 @@
 - hosts: localhost
   remote_user: ocpadmin
   roles:
-#    - { role: ocp }
-    - { role: delete_vm }
+    - { role: ocp }
+#    - { role: delete_vm }
   

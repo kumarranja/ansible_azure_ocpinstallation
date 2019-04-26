@@ -5,6 +5,6 @@
 #- debug:
 #    msg: "{{ input }}"
 
-- include_vars: /home/ocpadmin/OCP_Automation_galaxy/ocp/vars/main.yaml
+- include_vars: "{{role_path}}/vars/main.yaml"
 
 - include: multiple_vm.yaml
